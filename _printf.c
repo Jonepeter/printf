@@ -1,7 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdarg.h>
+#include <unistd.h>
 #include "main.h"
 /**
+<<<<<<< HEAD
 <<<<<<< HEAD
  * _printf - is a function that selects the correct function to print.
  * @format: identifier to look for.
@@ -51,13 +52,53 @@ Here:
  *
  * Return: number of chars that print
  */
+=======
+  * find_function - function that finds formats for _printf
+  * calls the corresponding function.
+  * @format: format (char, string, int, decimal)
+  * Return: NULL or function associated ;
+  */
+int (*find_function(const char *format))(va_list)
+{
+	unsigned int i = 0;
+	code_f find_f[] = {
+		{"c", print_char},
+		{"s", print_string},
+		{"i", print_int},
+		{"d", print_dec},
+		{"r", print_rev},
+		{"b", print_bin},
+		{"u", print_unsig},
+		{"o", print_octal},
+		{"x", print_x},
+		{"X", print_X},
+		{"R", print_rot13},
+		{NULL, NULL}
+	};
+
+	while (find_f[i].sc)
+	{
+		if (find_f[i].sc[0] == (*format))
+			return (find_f[i].f);
+		i++;
+	}
+	return (NULL);
+}
+/**
+  * _printf - function that produces output according to a format.
+  * @format: format (char, string, int, decimal)
+  * Return: size the output text;
+  */
+>>>>>>> a251f8ec9a5558c32e9bfc2c463a83a94733ac2c
 int _printf(const char *format, ...)
 {
-	va_list args;
-	int length = 0;
+	va_list ap;
+	int (*f)(va_list);
+	unsigned int i = 0, cprint = 0;
 
 	if (format == NULL)
 		return (-1);
+<<<<<<< HEAD
 
 	va_start(args, format);
 
@@ -65,4 +106,35 @@ int _printf(const char *format, ...)
 	va_end(args);
 	return (length);
 >>>>>>> 0966cd4e722e614964ec675f345b74953bf671f8
+=======
+	va_start(ap, format);
+	while (format[i])
+	{
+		while (format[i] != '%' && format[i])
+		{
+			_putchar(format[i]);
+			cprint++;
+			i++;
+		}
+		if (format[i] == '\0')
+			return (cprint);
+		f = find_function(&format[i + 1]);
+		if (f != NULL)
+		{
+			cprint += f(ap);
+			i += 2;
+			continue;
+		}
+		if (!format[i + 1])
+			return (-1);
+		_putchar(format[i]);
+		cprint++;
+		if (format[i + 1] == '%')
+			i += 2;
+		else
+			i++;
+	}
+	va_end(ap);
+	return (cprint);
+>>>>>>> a251f8ec9a5558c32e9bfc2c463a83a94733ac2c
 }
