@@ -1,75 +1,86 @@
+#include <stdarg.h>
 #include "main.h"
+#include <stddef.h>
 
 /**
- * print_op - function to check which specifier to print
- * @format: string being passed
- * @print_arr: array of struct ops
- * @list: list of arguments to print
- * Return: numb of char to be printed
+ * get_op - select function for conversion char
+ * @c: char to check
+ * Return: pointer to function
  */
-int print_op(const char *format, fmt_t *print_arr, va_list list)
-{
-	char a;
-	int count = 0, b = 0, c = 0;
 
-	a = format[b];
-	while (a != '\0')
+int (*get_op(const char c))(va_list)
+{
+	int i = 0;
+
+	flags_p fp[] = {
+		{"c", print_char},
+		{"s", print_str},
+		{"i", print_nbr},
+		{"d", print_nbr},
+		{"b", print_binary},
+		{"o", print_octal},
+		{"x", print_hexa_lower},
+		{"X", print_hexa_upper},
+		{"u", print_unsigned},
+		{"S", print_str_unprintable},
+		{"r", print_str_reverse},
+		{"p", print_ptr},
+		{"R", print_rot13},
+		{"%", print_percent}
+	};
+	while (i < 14)
 	{
-		if (a == '%')
+		if (c == fp[i].c[0])
 		{
-			c = 0;
-			b++;
-			a = format[b];
-			while (print_arr[c].type != NULL &&
-			       a != *(print_arr[c].type))
-				c++;
-			if (print_arr[c].type != NULL)
-				count = count + print_arr[c].f(list);
-			else
-			{
-				if (a == '\0')
-					return (-1);
-				if (a != '%')
-					count += _putchar('%');
-				count += _putchar(a);
-			}
+			return (fp[i].f);
 		}
-		else
-			count += _putchar(a);
-		b++;
-		a = format[b];
+		i++;
 	}
-	return (count);
+	return (NULL);
 }
 
 /**
- * _printf - prints output according to format
- * @format: string being passed
- * Return: char to be printed
+ * _printf - Reproduce behavior of printf function
+ * @format: format string
+ * Return: value of printed chars
  */
+
 int _printf(const char *format, ...)
 {
-	va_list list;
-	int a = 0;
+	va_list ap;
+	int sum = 0, i = 0;
+	int (*func)();
 
-	fmt_t ops[] = {
-		{"c", ch},
-		{"s", str},
-		{"d", _int},
-		{"b", _bin},
-		{"i", _int},
-		{"u", _ui},
-		{"o", _oct},
-		{"x", _hex_l},
-		{"X", _hex_u},
-		{"R", _rot13},
-		{NULL, NULL}
-	};
-
-	if (format == NULL)
+	if (!format || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
-	va_start(list, format);
-	a = print_op(format, ops, list);
-	va_end(list);
-	return (a);
+	va_start(ap, format);
+
+	while (format[i])
+	{
+		if (format[i] == '%')
+		{
+			if (format[i + 1] != '\0')
+				func = get_op(format[i + 1]);
+			if (func == NULL)
+			{
+				_putchar(format[i]);
+				sum++;
+				i++;
+			}
+			else
+			{
+				sum += func(ap);
+				i += 2;
+				continue;
+			}
+		}
+		else
+		{
+			_putchar(format[i]);
+			sum++;
+			i++;
+		}
+	}
+	va_end(ap);
+	return (sum);
 }
