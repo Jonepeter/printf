@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #include "holberton.h"
+=======
+#include "main.h"
+>>>>>>> 96fbfcc468d4c6588161cb59876419a3ee5bb00d
 /**
  * _printf - is a function that selects the correct function to print.
  * @format: identifier to look for.
