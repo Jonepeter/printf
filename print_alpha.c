@@ -1,6 +1,7 @@
 #include "main.h"
 
 /**
+ * non cstom specifiers
  * print_string - loops through a string and prints
  * every character
  * @l: va_list arguments from _printf
