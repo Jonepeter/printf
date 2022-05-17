@@ -1,4 +1,6 @@
+#include <stdarg.h>
 #include "main.h"
+<<<<<<< HEAD
 #include <stdlib.h>
 
 /**
@@ -86,39 +88,90 @@ int _printf(const char *format, ...)
  * @print_arr: array of struct ops
  * @list: list of arguments to print
  * Return: numb of char to be printed
- */
-int print_op(const char *format, fmt_t *print_arr, va_list list)
-{
-	char a;
-	int count = 0, b = 0, c = 0;
+=======
+#include <stddef.h>
 
-	a = format[b];
-	while (a != '\0')
+/**
+ * get_op - select function for conversion char
+ * @c: char to check
+ * Return: pointer to function
+>>>>>>> 5c7636c999978b9e9e48601720c162bbf26e4d5d
+ */
+
+int (*get_op(const char c))(va_list)
+{
+	int i = 0;
+
+	flags_p fp[] = {
+		{"c", print_char},
+		{"s", print_str},
+		{"i", print_nbr},
+		{"d", print_nbr},
+		{"b", print_binary},
+		{"o", print_octal},
+		{"x", print_hexa_lower},
+		{"X", print_hexa_upper},
+		{"u", print_unsigned},
+		{"S", print_str_unprintable},
+		{"r", print_str_reverse},
+		{"p", print_ptr},
+		{"R", print_rot13},
+		{"%", print_percent}
+	};
+	while (i < 14)
 	{
-		if (a == '%')
+		if (c == fp[i].c[0])
 		{
-			c = 0;
-			b++;
-			a = format[b];
-			while (print_arr[c].type != NULL &&
-			       a != *(print_arr[c].type))
-				c++;
-			if (print_arr[c].type != NULL)
-				count = count + print_arr[c].f(list);
+			return (fp[i].f);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
+/**
+ * _printf - Reproduce behavior of printf function
+ * @format: format string
+ * Return: value of printed chars
+ */
+
+int _printf(const char *format, ...)
+{
+	va_list ap;
+	int sum = 0, i = 0;
+	int (*func)();
+
+	if (!format || (format[0] == '%' && format[1] == '\0'))
+		return (-1);
+	va_start(ap, format);
+
+	while (format[i])
+	{
+		if (format[i] == '%')
+		{
+			if (format[i + 1] != '\0')
+				func = get_op(format[i + 1]);
+			if (func == NULL)
+			{
+				_putchar(format[i]);
+				sum++;
+				i++;
+			}
 			else
 			{
-				if (a == '\0')
-					return (-1);
-				if (a != '%')
-					count += _putchar('%');
-				count += _putchar(a);
+				sum += func(ap);
+				i += 2;
+				continue;
 			}
 		}
 		else
-			count += _putchar(a);
-		b++;
-		a = format[b];
+		{
+			_putchar(format[i]);
+			sum++;
+			i++;
+		}
 	}
+<<<<<<< HEAD
 	return (count);
 }
 
@@ -153,4 +206,8 @@ int _printf(const char *format, ...)
 	va_end(list);
 	return (a);
 >>>>>>> 1c63af7ec7c3bcca3c4dea1ad0c89e64b3ef1d4e
+=======
+	va_end(ap);
+	return (sum);
+>>>>>>> 5c7636c999978b9e9e48601720c162bbf26e4d5d
 }
