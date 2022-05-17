@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 /**
+ * variadic function format
  * _printf - produces output according to a format
  * @format: format string containing the characters and the specifiers
  * Description: this function will call the get_print() function that will
