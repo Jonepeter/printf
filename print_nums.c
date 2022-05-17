@@ -2,7 +2,6 @@
 
 /**
  * print_int - prints an integer
- * flag characters for non-custom conversion specifiers
  * @l: va_list of arguments from _printf
  * @f: pointer to the struct flags determining
  * if a flag is passed to _printf

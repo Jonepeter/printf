@@ -1,7 +1,6 @@
 #include "main.h"
 
 /**
- * all formating specifiers
  * print_hex - prints a number in hexadecimal base,
  * in lowercase
  * @l: va_list arguments from _printf
@@ -83,4 +82,3 @@ int print_octal(va_list l, flags_t *f)
 	count += _puts(str);
 	return (count);
 }
-	
