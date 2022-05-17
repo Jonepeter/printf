@@ -1,6 +1,7 @@
 #include "main.h"
 
 /**
+ * conversion specifiers used for printf(), scanf()
  * get_print - selects the right printing function
  * depending on the conversion specifier passed to _printf
  * @s: character that holds the conversion specifier
