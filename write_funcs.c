@@ -2,6 +2,7 @@
 #include <unistd.h>
 
 /**
+ * to print local buffer of 1024 
  * _putchar - writes the character c to stdout
  * @c: The character to print
  * Return: On success 1.
